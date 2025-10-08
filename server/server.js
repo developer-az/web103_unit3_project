@@ -2,8 +2,11 @@ import express from 'express'
 import path from 'path'
 import favicon from 'serve-favicon'
 import dotenv from 'dotenv'
+import cors from 'cors'
 
-// import the router from your routes file
+// import the routers from your routes files
+import locationsRouter from './routes/locations.js'
+import eventsRouter from './routes/events.js'
 
 
 dotenv.config()
@@ -11,6 +14,12 @@ dotenv.config()
 const PORT = process.env.PORT || 3000
 
 const app = express()
+
+// Enable CORS for all routes
+app.use(cors({
+    origin: ['http://localhost:5173', 'http://localhost:5174', 'http://localhost:5175'],
+    credentials: true
+}))
 
 app.use(express.json())
 
@@ -23,6 +32,8 @@ else if (process.env.NODE_ENV === 'production') {
 }
 
 // specify the api path for the server to use
+app.use('/api/locations', locationsRouter)
+app.use('/api/events', eventsRouter)
 
 
 if (process.env.NODE_ENV === 'production') {
